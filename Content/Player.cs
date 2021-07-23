@@ -73,7 +73,7 @@ namespace CrownEngine.Content
             if (velocity.Y == 0 && oldVelocity.Y > 0)
             {
                 jumpTimer = 0;
-                squashHeight = (int)(oldVelocity.Y * 2); //yea cat
+                squashHeight = (int)(oldVelocity.Y * 2);
                 gravityFactor = 0.3f;
             }
 
