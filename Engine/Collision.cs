@@ -41,5 +41,23 @@ namespace CrownEngine.Engine
               rect1.Right > rect2.Left &&
               rect1.Left < rect2.Right;
         }
+
+        public static bool IsColliding(Rectangle rect1, Rectangle rect2, Vector2 vel)
+        {
+            return IsTouchingLeft(rect1, rect2, vel) || IsTouchingRight(rect1, rect2, vel) || IsTouchingTop(rect1, rect2, vel) || IsTouchingBottom(rect1, rect2, vel);
+        }
+
+        public static Actor IsCollidingWithAnything(Rectangle rect, Vector2 velocity)
+        {
+            for (int i = 0; i < EngineGame.instance.activeStage.actors.Count; i++)
+            {
+                if (EngineGame.instance.activeStage.actors[i] != null)
+                {
+                    if (IsColliding(rect, EngineGame.instance.activeStage.actors[i].rect, velocity)) return EngineGame.instance.activeStage.actors[i];
+                }
+            }
+
+            return null;
+        }
     }
 }

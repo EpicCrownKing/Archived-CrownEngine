@@ -8,6 +8,9 @@ using CrownEngine.Content;
 using CrownEngine.Engine;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
+using System.Reflection;
+using System.Linq;
+using System.IO;
 
 namespace CrownEngine
 {
@@ -16,14 +19,18 @@ namespace CrownEngine
         public GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
 
-        public int windowWidth = 200;
-        public int windowHeight = 200;
-        public int windowScale = 2;
+        public static EngineGame instance;
 
-        public Color defaultColor = Color.Black;
+        public virtual int windowWidth => 150;
+        public virtual int windowHeight => 250;
+        public virtual int windowScale => 2;
 
-        public Stage activeStage;
+        public Stage activeStage = new Stage();
         public List<Stage> stages = new List<Stage>();
+
+        public Texture2D MissingTexture;
+
+        public Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
 
         public EngineGame()
         {
@@ -34,58 +41,58 @@ namespace CrownEngine
 
         protected override void Initialize()
         {
+            instance = this; 
+
             scene = new RenderTarget2D(GraphicsDevice, windowWidth, windowHeight, false, SurfaceFormat.Color, DepthFormat.None);
 
             base.Initialize();
-        }
 
-        Texture2D tilesheet;
-        protected override void LoadContent()
-        {
+            foreach (string file in Directory.EnumerateFiles("Content/", "*.png", SearchOption.AllDirectories))
+            {
+                string fixedPath = file.Substring(Content.RootDirectory.Length).TrimStart(Path.DirectorySeparatorChar);
+                Textures[Path.GetFileName(fixedPath)] = Texture2D.FromStream(GraphicsDevice, File.OpenRead(file));
+            }
+
+            MissingTexture = Textures["MissingTexture.png"];
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            tilesheet = Content.Load<Texture2D>("Grass");
+            InitializeStages();
+        }
 
-            InitializeStages(ref stages);
+        public virtual void InitializeStages()
+        {
+            stages.Add(new Breakout());
 
             activeStage = stages[0];
+
+            activeStage.Load();
         }
 
-        public void InitializeStages(ref List<Stage> stages)
-        {
-            stages.Add(new Stage());
-        }
-
-        public int updateCount;
         protected override void Update(GameTime gameTime)
         {
-            if (!levelHasLoaded) { OnLoadLevel(); }
-
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            updateCount++;
-            if(updateCount >= 60)
-            {
-                updateCount = 0;
-            }
+            activeStage.Update();
 
             base.Update(gameTime);
         }
 
-        private bool levelHasLoaded = false;
-        private void OnLoadLevel()
+        public void SwitchStages(int newStage)
         {
-            levelHasLoaded = true;
-        }
+            activeStage.Unload();
 
-        public static EngineGame instance = new EngineGame();
+            activeStage = stages[newStage];
+
+            activeStage.Load();
+        }
 
         protected void DrawSceneToTexture(RenderTarget2D renderTarget)
         {
             GraphicsDevice.SetRenderTarget(renderTarget);
 
-            GraphicsDevice.Clear(defaultColor);
+            GraphicsDevice.Clear(activeStage.bgColor);
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
 
@@ -100,7 +107,7 @@ namespace CrownEngine
                 }
             }*/
 
-            activeStage.Draw();
+            activeStage.Draw(_spriteBatch);
 
             //activeLevel.player.Draw(_spriteBatch);
 

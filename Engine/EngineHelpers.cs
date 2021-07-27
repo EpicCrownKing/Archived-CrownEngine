@@ -28,5 +28,11 @@ namespace CrownEngine.Engine
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, null);
         }
+
+
+        public static Texture2D GetTexture(string name)
+        {
+            return EngineGame.instance.Textures[name + ".png"];
+        }
     }
 }

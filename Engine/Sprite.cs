@@ -13,6 +13,7 @@ namespace CrownEngine.Engine
 
         public virtual int width => 16;
         public virtual int height => 16;
+
         protected Vector2 scale = Vector2.One;
         protected float rotation = 0f;
 
@@ -22,7 +23,23 @@ namespace CrownEngine.Engine
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y), new Rectangle(0, 0, width, height), Color.White, rotation, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y), new Rectangle(0, 0, width, height), color, rotation, Vector2.Zero, scale, SpriteEffects.None, 0f);
+        }
+
+        public Rectangle rect
+        {
+            get
+            {
+                return new Rectangle((int)position.X, (int)position.Y, width, height);
+            }
+        }
+
+        public Vector2 Center
+        {
+            get
+            {
+                return new Vector2(position.X + width / 2, position.Y + height / 2);
+            }
         }
     }
 }
