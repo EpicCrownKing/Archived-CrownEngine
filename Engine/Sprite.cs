@@ -23,7 +23,7 @@ namespace CrownEngine.Engine
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y), new Rectangle(0, 0, width, height), color, rotation, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, new Vector2((int)position.X, (int)position.Y), new Rectangle(0, 0, width, height), color, rotation, texture.Bounds.Size.ToVector2() / 2f, scale, SpriteEffects.None, 0f);
         }
 
         public Rectangle rect

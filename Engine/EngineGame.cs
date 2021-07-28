@@ -21,8 +21,8 @@ namespace CrownEngine
 
         public static EngineGame instance;
 
-        public virtual int windowWidth => 150;
-        public virtual int windowHeight => 250;
+        public virtual int windowWidth => 160;
+        public virtual int windowHeight => 200;
         public virtual int windowScale => 2;
 
         public Stage activeStage = new Stage();
@@ -62,7 +62,7 @@ namespace CrownEngine
 
         public virtual void InitializeStages()
         {
-            stages.Add(new Breakout());
+            stages.Add(new Facility());
 
             activeStage = stages[0];
 

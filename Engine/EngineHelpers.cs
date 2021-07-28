@@ -10,14 +10,6 @@ namespace CrownEngine.Engine
 {
     public static class EngineHelpers
     {
-        public static float Clamp(float val, float minVal, float maxVal)
-        {
-            if (val < minVal) val = minVal;
-            if (val > maxVal) val = maxVal;
-
-            return val;
-        }
-
         public static void DrawAdditive(SpriteBatch spriteBatch, Texture2D tex, Vector2 position, Color color, float scale = 1f, float rotation = 0f)
         {
             spriteBatch.End();
@@ -28,7 +20,6 @@ namespace CrownEngine.Engine
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, null);
         }
-
 
         public static Texture2D GetTexture(string name)
         {

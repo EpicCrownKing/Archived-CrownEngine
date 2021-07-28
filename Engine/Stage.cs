@@ -10,7 +10,6 @@ namespace CrownEngine.Engine
 {
     public class Stage
     {
-        public Tile[,] tilemap;
         public List<Actor> actors = new List<Actor>();
 
         public virtual Color bgColor => Color.Black;

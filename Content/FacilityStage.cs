@@ -9,9 +9,9 @@ using static CrownEngine.Engine.EngineHelpers;
 
 namespace CrownEngine.Content
 {
-    public class Breakout : Stage
+    public class Facility : Stage
     {
-        public override Color bgColor => Color.DarkSlateBlue;
+        public override Color bgColor => Color.Black;
 
         public override void Update()
         {
@@ -25,16 +25,7 @@ namespace CrownEngine.Content
 
         public override void Load()
         {
-            AddActor(new BreakoutPad(new Vector2(EngineGame.instance.windowWidth / 2, 225), Vector2.Zero, this));
-
-            for(int j = 4; j < 144; j += 18)
-            {
-                for (int k = 20; k < 50; k += 6)
-                {
-                    AddActor(new BreakoutBlock(new Vector2(j, k), Vector2.Zero, this));
-                }
-            }
-
+            AddActor(new Player(new Vector2(75, 100), Vector2.Zero, this));
             base.Load();
         }
     }
