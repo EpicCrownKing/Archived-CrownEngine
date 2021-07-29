@@ -12,9 +12,13 @@ namespace CrownEngine.Engine
     {
         public List<Actor> actors = new List<Actor>();
 
+        public List<TileGrid> gridsToUpdate = new List<TileGrid>();
+
         public virtual Color bgColor => Color.Black;
 
         public bool loaded = false;
+
+        public Vector2 screenPosition;
 
         public Stage()
         {

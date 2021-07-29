@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace CrownEngine.Content
 {
-    public class Player : PhysicsActor
+    public class PlayerBolt : PhysicsActor
     {
-        public Player(Vector2 pos, Vector2 vel, Stage stage) : base(pos, vel, stage)
+        public PlayerBolt(Vector2 pos, Vector2 vel, Stage stage) : base(pos, vel, stage)
         {
             position = pos;
             velocity = vel;
@@ -19,46 +19,17 @@ namespace CrownEngine.Content
             myStage = stage;
         }
 
-        public override int width => 8;
-        public override int height => 12;
+        public override int width => 6;
+        public override int height => 6;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
         }
 
-        public float rotationVel;
-
         public override void PhysicsActorUpdate()
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-                rotationVel -= 0.02f;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-                rotationVel += 0.02f;
-
-            if (!Keyboard.GetState().IsKeyDown(Keys.D) && !Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                rotationVel *= 0.5f;
-            }
-
-            rotationVel = rotationVel.Clamp(-0.1f, 0.1f);
-
-            rotation += rotationVel;
-
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-                velocity += (-Vector2.UnitY).RotatedBy(rotation) * 0.15f;
-            else if (Keyboard.GetState().IsKeyDown(Keys.S))
-                velocity += (Vector2.UnitY).RotatedBy(rotation) * 0.15f;
-            else
-                velocity *= 0.8f;
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            {
-                myStage.AddActor(new PlayerBolt());
-            }
-
-            velocity = velocity.ClampVectorMagnitude(3f);
 
             ManageCollision();
 

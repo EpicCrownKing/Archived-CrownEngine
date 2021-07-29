@@ -63,6 +63,7 @@ namespace CrownEngine
         public virtual void InitializeStages()
         {
             stages.Add(new Facility());
+            stages.Add(new Facility());
 
             activeStage = stages[0];
 

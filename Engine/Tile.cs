@@ -10,9 +10,12 @@ namespace CrownEngine.Engine
 {
     public class Tile
     {
-        public Texture2D texture;
-        public int id;
+        public Tile()
+        {
 
-        
+        }
+
+        public virtual Texture2D texture => EngineGame.instance.MissingTexture;
+        public Color color = Color.White;
     }
 }
