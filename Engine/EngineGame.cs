@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using System.Reflection;
 using System.Linq;
 using System.IO;
+using Microsoft.Xna.Framework.Audio;
 
 namespace CrownEngine
 {
@@ -21,9 +22,9 @@ namespace CrownEngine
 
         public static EngineGame instance;
 
-        public virtual int windowWidth => 160;
-        public virtual int windowHeight => 200;
-        public virtual int windowScale => 2;
+        public int windowWidth = 160;
+        public int windowHeight = 200;
+        public int windowScale = 2;
 
         public Stage activeStage = new Stage();
         public List<Stage> stages = new List<Stage>();
@@ -31,6 +32,13 @@ namespace CrownEngine
         public Texture2D MissingTexture;
 
         public Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
+
+        public Dictionary<string, SoundEffect> SoundEffects = new Dictionary<string, SoundEffect>();
+
+        public Random random;
+
+        public KeyboardState oldKeyboardState;
+        public KeyboardState keyboardState;
 
         public EngineGame()
         {
@@ -55,6 +63,14 @@ namespace CrownEngine
 
             MissingTexture = Textures["MissingTexture.png"];
 
+            /*foreach (string file in Directory.EnumerateFiles("Content/", "*.wav", SearchOption.AllDirectories))
+            {
+                string fixedPath = file.Substring(Content.RootDirectory.Length).TrimStart(Path.DirectorySeparatorChar);
+                SoundEffects[Path.GetFileName(fixedPath)] = SoundEffect.FromFile(fixedPath);
+            }*/
+
+            random = new Random();
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             InitializeStages();
@@ -72,10 +88,22 @@ namespace CrownEngine
 
         protected override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            oldKeyboardState = keyboardState;
+            keyboardState = Keyboard.GetState();
+
+            if (keyboardState.IsKeyDown(Keys.Escape))
                 Exit();
 
             activeStage.Update();
+
+            if(keyboardState.IsKeyDown(Keys.OemPlus) && windowScale < 6)
+            {
+                windowScale++;
+            }
+            if (keyboardState.IsKeyDown(Keys.OemMinus) && windowScale > 1)
+            {
+                windowScale--;
+            }
 
             base.Update(gameTime);
         }

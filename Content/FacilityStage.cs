@@ -67,83 +67,131 @@ namespace CrownEngine.Content
             spriteBatch.Draw(EngineHelpers.GetTexture("Blank"), new Rectangle(0, 0, 160, 40), Color.Black);
         }
 
-        public int[,] roomLayout = new int[,]
-            {
-                 { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 },
-                 { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-                 { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
-                 { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 },
-            };
-
         public override void Load()
         {
             AddActor(new Player(new Vector2(80, 120), Vector2.Zero, this));
 
-            TileGrid grid = new TileGrid(new Vector2(0, 40), 8, this, new Tile[]
+            int[,] roomsLayout = new int[5, 5];
+
+            roomsLayout[2, 2] = 1;
+
+            for (int k = 0; k < 4; k++)
             {
-                null,
-                new Bricks(Color.White)
-            }, roomLayout);
+                for (int i = 0; i < roomsLayout.GetLength(1); i++)
+                {
+                    for (int j = 0; j < roomsLayout.GetLength(0); j++)
+                    {
+                        if(roomsLayout[j, i] == 1)
+                        {
+                            int rand = EngineGame.instance.random.Next(4);
 
-            AddActor(grid);
+                            if (rand == 0)
+                                if(i + 1 < 5)
+                                    roomsLayout[j, i + 1] = 1;
+                            if (rand == 1)
+                                if (i > 0)
+                                    roomsLayout[j, i - 1] = 1;
+                            if (rand == 2)
+                                if (j + 1 < 5)
+                                    roomsLayout[j + 1, i] = 1;
+                            if (rand == 3)
+                                if (j > 0)
+                                    roomsLayout[j - 1, i] = 1;
+                        }
+                    }
+                }
+            }
 
-            gridsToUpdate.Add(grid);
-
-            TileGrid grid2 = new TileGrid(new Vector2(-160, 40), 8, this, new Tile[]
+            for (int i = 0; i < roomsLayout.GetLength(1); i++)
             {
-                null,
-                new Bricks(Color.Red)
-            }, roomLayout);
+                for (int j = 0; j < roomsLayout.GetLength(0); j++)
+                {
+                    if (roomsLayout[j, i] == 1)
+                    {
+                        int[,] thisRoomStructure = new int[,]
+                        {
+                             { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 },
+                             { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                             { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
+                             { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 },
+                        };
 
-            AddActor(grid2);
+                        for (int k = 7; k < 13; k++)
+                        {
+                            thisRoomStructure[k, 19] = 0;
+                        }
+                        for (int k = 7; k < 13; k++)
+                        {
+                            thisRoomStructure[k, 0] = 0;
+                        }
+                        for (int k = 7; k < 13; k++)
+                        {
+                            thisRoomStructure[19, k] = 0;
+                        }
+                        for (int k = 7; k < 13; k++)
+                        {
+                            thisRoomStructure[0, k] = 0;
+                        }
 
-            gridsToUpdate.Add(grid2);
+                        if (i + 1 >= 5 || roomsLayout[j, i + 1] == 0) //right
+                        {
+                            for(int k = 7; k < 13; k++)
+                            {
+                                thisRoomStructure[k, 19] = 1;
+                            }
+                        }
+                        if (i <= 0 || roomsLayout[j, i - 1] == 0) //left
+                        {
+                            for (int k = 7; k < 13; k++)
+                            {
+                                thisRoomStructure[k, 0] = 1;
+                            }
+                        }
 
-            TileGrid grid3 = new TileGrid(new Vector2(0, -120), 8, this, new Tile[]
-            {
-                null,
-                new Bricks(Color.Green)
-            }, roomLayout);
+                        if (j + 1 >= 5 || roomsLayout[j + 1, i] == 0) //below
+                        {
+                            for (int k = 7; k < 13; k++)
+                            {
+                                thisRoomStructure[19, k] = 1;
+                            }
+                        }
+                        if (j <= 0 || roomsLayout[j - 1, i] == 0) //above
+                        {
+                            for (int k = 7; k < 13; k++)
+                            {
+                                thisRoomStructure[0, k] = 1;
+                            }
+                        }
 
-            AddActor(grid3);
 
-            gridsToUpdate.Add(grid3);
+                        TileGrid grid = new TileGrid(new Vector2(0 + ((i - 2) * 160), 40 + ((j - 2) * 160)), 8, this, new Tile[]
+                        {
+                            null,
+                            new Bricks(Color.White)
+                        }, thisRoomStructure);
 
-            TileGrid grid4 = new TileGrid(new Vector2(160, 40), 8, this, new Tile[]
-            {
-                null,
-                new Bricks(Color.Blue)
-            }, roomLayout);
+                        AddActor(grid);
 
-            AddActor(grid4);
-
-            gridsToUpdate.Add(grid4);
-
-            TileGrid grid5 = new TileGrid(new Vector2(0, 200), 8, this, new Tile[]
-            {
-                null,
-                new Bricks(Color.Yellow)
-            }, roomLayout);
-
-            AddActor(grid5);
-
-            gridsToUpdate.Add(grid5);
+                        gridsToUpdate.Add(grid);
+                    }
+                }
+            }
 
             internalScreenPos = new Vector2(80, 120);
 

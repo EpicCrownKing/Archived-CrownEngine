@@ -102,7 +102,7 @@ namespace CrownEngine.Engine
 
             else if(above == 0 && below == 1 && left == 0 && right == 1)
             {
-                return new Vector2(3, 1) * tileScale;
+                return new Vector2(1, 3) * tileScale;
             }
             else if(above == 0 && below == 1 && left == 1 && right == 0)
             {

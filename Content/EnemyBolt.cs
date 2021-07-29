@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace CrownEngine.Content
 {
-    public class PlayerBolt : PhysicsActor
+    public class EnemyBolt : PhysicsActor
     {
-        public PlayerBolt(Vector2 pos, Vector2 vel, Stage stage, Actor myOwner) : base(pos, vel, stage)
+        public EnemyBolt(Vector2 pos, Vector2 vel, Stage stage, Actor myOwner) : base(pos, vel, stage)
         {
             position = pos;
             velocity = vel;

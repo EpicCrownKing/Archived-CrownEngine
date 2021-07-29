@@ -6,6 +6,7 @@ using CrownEngine.Engine;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 namespace CrownEngine.Content
 {
@@ -31,13 +32,13 @@ namespace CrownEngine.Content
 
         public override void PhysicsActorUpdate()
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            if (EngineGame.instance.keyboardState.IsKeyDown(Keys.A))
                 rotationVel -= 0.02f;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            if (EngineGame.instance.keyboardState.IsKeyDown(Keys.D))
                 rotationVel += 0.02f;
 
-            if (!Keyboard.GetState().IsKeyDown(Keys.D) && !Keyboard.GetState().IsKeyDown(Keys.A))
+            if (!EngineGame.instance.keyboardState.IsKeyDown(Keys.D) && !EngineGame.instance.keyboardState.IsKeyDown(Keys.A))
             {
                 rotationVel *= 0.5f;
             }
@@ -46,16 +47,16 @@ namespace CrownEngine.Content
 
             rotation += rotationVel;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            if (EngineGame.instance.keyboardState.IsKeyDown(Keys.W))
                 velocity += (-Vector2.UnitY).RotatedBy(rotation) * 0.15f;
-            else if (Keyboard.GetState().IsKeyDown(Keys.S))
+            else if (EngineGame.instance.keyboardState.IsKeyDown(Keys.S))
                 velocity += (Vector2.UnitY).RotatedBy(rotation) * 0.15f;
             else
                 velocity *= 0.8f;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            if (EngineGame.instance.keyboardState.IsKeyDown(Keys.T) && !EngineGame.instance.oldKeyboardState.IsKeyDown(Keys.T))
             {
-                myStage.AddActor(new PlayerBolt());
+                myStage.AddActor(new PlayerBolt(position, (-Vector2.UnitY).RotatedBy(rotation) * 3, myStage, this));
             }
 
             velocity = velocity.ClampVectorMagnitude(3f);

@@ -6,33 +6,45 @@ using CrownEngine.Engine;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 namespace CrownEngine.Content
 {
-    public class PlayerBolt : PhysicsActor
+    public class EnemyShip : PhysicsActor
     {
-        public PlayerBolt(Vector2 pos, Vector2 vel, Stage stage, Actor myOwner) : base(pos, vel, stage)
+        public EnemyShip(Vector2 pos, Vector2 vel, Stage stage) : base(pos, vel, stage)
         {
             position = pos;
             velocity = vel;
 
             myStage = stage;
-
-            owner = myOwner;
         }
 
-        public override int width => 6;
-        public override int height => 6;
+        public override int width => 8;
+        public override int height => 14;
 
-        public Actor owner;
+        public int hp = 3;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
         }
 
+        public float rotationVel;
+
         public override void PhysicsActorUpdate()
         {
+            rotationVel = rotationVel.Clamp(-0.1f, 0.1f);
+
+            rotation += rotationVel;
+
+            if (EngineGame.instance.keyboardState.IsKeyDown(Keys.T) && !EngineGame.instance.oldKeyboardState.IsKeyDown(Keys.T))
+            {
+                myStage.AddActor(new EnemyBolt(position, (-Vector2.UnitY).RotatedBy(rotation) * 3, myStage, this));
+            }
+
+            velocity = velocity.ClampVectorMagnitude(3f);
+
             ManageCollision();
 
             base.PhysicsActorUpdate();
@@ -61,21 +73,13 @@ namespace CrownEngine.Content
 
                             if ((velocity.X > 0 && Collision.IsTouchingLeft(playerRect, tileRect, velocity)) ||
                                 (velocity.X < 0 && Collision.IsTouchingRight(playerRect, tileRect, velocity)))
-                                Kill();
+                                velocity.X = 0;
 
                             if ((velocity.Y > 0 && Collision.IsTouchingTop(playerRect, tileRect, velocity)) ||
                                 (velocity.Y < 0 && Collision.IsTouchingBottom(playerRect, tileRect, velocity)))
-                                Kill();
+                                velocity.Y = 0;
                         }
                     }
-                }
-            }
-
-            for(int k = 0; k < myStage.actors.Count; k++)
-            {
-                if(myStage.actors[k] != null && myStage.actors[k] != owner && myStage.actors[k] != this && myStage.actors[k].rect.Intersects(this.rect))
-                {
-                    Kill();
                 }
             }
         }
