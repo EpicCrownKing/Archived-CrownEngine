@@ -71,6 +71,8 @@ namespace CrownEngine.Content
             base.PhysicsActorLoad();
         }
 
+        public int hp = 3;
+
         private void ManageCollision()
         {
             for (int k = 0; k < myStage.gridsToUpdate.Count; k++)
@@ -96,6 +98,14 @@ namespace CrownEngine.Content
                                 velocity.Y = 0;
                         }
                     }
+                }
+            }
+
+            for (int k = 0; k < myStage.actors.Count; k++)
+            {
+                if (myStage.actors[k] != null && myStage.actors[k] != this && myStage.actors[k].GetType().Name != "PlayerBolt" && myStage.actors[k].rect.Intersects(this.rect))
+                {
+                    hp--;
                 }
             }
         }

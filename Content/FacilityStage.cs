@@ -64,7 +64,7 @@ namespace CrownEngine.Content
 
             base.Draw(spriteBatch);
 
-            spriteBatch.Draw(EngineHelpers.GetTexture("Blank"), new Rectangle(0, 0, 160, 40), Color.Black);
+            spriteBatch.Draw(GetTexture("Blank"), new Rectangle(0, 0, 160, 40), Color.Black);
         }
 
         public override void Load()
@@ -74,6 +74,8 @@ namespace CrownEngine.Content
             int[,] roomsLayout = new int[5, 5];
 
             roomsLayout[2, 2] = 1;
+            roomsLayout[3, 2] = 1;
+            roomsLayout[4, 2] = 2;
 
             for (int k = 0; k < 4; k++)
             {
@@ -86,16 +88,16 @@ namespace CrownEngine.Content
                             int rand = EngineGame.instance.random.Next(4);
 
                             if (rand == 0)
-                                if(i + 1 < 5)
+                                if(i + 1 < 5 && roomsLayout[j, i + 1] == 0)
                                     roomsLayout[j, i + 1] = 1;
                             if (rand == 1)
-                                if (i > 0)
+                                if (i > 0 && roomsLayout[j, i - 1] == 0)
                                     roomsLayout[j, i - 1] = 1;
                             if (rand == 2)
-                                if (j + 1 < 5)
+                                if (j + 1 < 5 && roomsLayout[j + 1, i] == 0)
                                     roomsLayout[j + 1, i] = 1;
                             if (rand == 3)
-                                if (j > 0)
+                                if (j > 0 && roomsLayout[j - 1, i] == 0)
                                     roomsLayout[j - 1, i] = 1;
                         }
                     }
@@ -132,31 +134,14 @@ namespace CrownEngine.Content
                              { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 },
                         };
 
-                        for (int k = 7; k < 13; k++)
-                        {
-                            thisRoomStructure[k, 19] = 0;
-                        }
-                        for (int k = 7; k < 13; k++)
-                        {
-                            thisRoomStructure[k, 0] = 0;
-                        }
-                        for (int k = 7; k < 13; k++)
-                        {
-                            thisRoomStructure[19, k] = 0;
-                        }
-                        for (int k = 7; k < 13; k++)
-                        {
-                            thisRoomStructure[0, k] = 0;
-                        }
-
-                        if (i + 1 >= 5 || roomsLayout[j, i + 1] == 0) //right
+                        if (i + 1 >= 5 || roomsLayout[j, i + 1] != 1) //right
                         {
                             for(int k = 7; k < 13; k++)
                             {
                                 thisRoomStructure[k, 19] = 1;
                             }
                         }
-                        if (i <= 0 || roomsLayout[j, i - 1] == 0) //left
+                        if (i <= 0 || roomsLayout[j, i - 1] != 1) //left
                         {
                             for (int k = 7; k < 13; k++)
                             {
@@ -171,7 +156,7 @@ namespace CrownEngine.Content
                                 thisRoomStructure[19, k] = 1;
                             }
                         }
-                        if (j <= 0 || roomsLayout[j - 1, i] == 0) //above
+                        if (j <= 0 || roomsLayout[j - 1, i] != 1) //above
                         {
                             for (int k = 7; k < 13; k++)
                             {
@@ -189,6 +174,44 @@ namespace CrownEngine.Content
                         AddActor(grid);
 
                         gridsToUpdate.Add(grid);
+                    }
+
+                    if(roomsLayout[j, i] == 2)
+                    {
+                        int[,] thisRoomStructure = new int[,]
+                        {
+                             { 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 },
+                             { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                             { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
+                             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                        };
+
+
+                        TileGrid bossGrid = new TileGrid(new Vector2(0 + ((i - 2) * 160), 40 + ((j - 2) * 160)), 8, this, new Tile[]
+                        {
+                            null,
+                            new Bricks(Color.Red)
+                        }, thisRoomStructure);
+
+                        AddActor(bossGrid);
+
+                        gridsToUpdate.Add(bossGrid);
                     }
                 }
             }
