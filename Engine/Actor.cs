@@ -23,6 +23,8 @@ namespace CrownEngine.Engine
 
         public Vector2 position = Vector2.Zero;
 
+        public List<Component> components = new List<Component>();
+
         public Actor(Vector2 pos, Stage stage)
         {
             position = pos;
@@ -37,12 +39,20 @@ namespace CrownEngine.Engine
 
         public virtual void Update()
         {
-
+            foreach(Component component in components)
+            {
+                component.Update();
+            }
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position - myStage.screenPosition, new Rectangle(0, 0, width, height), color, rotation, texture.Bounds.Size.ToVector2() / 2f, scale, SpriteEffects.None, 0f);
+
+            foreach (Component component in components)
+            {
+                component.Render(spriteBatch);
+            }
         }
 
         public virtual void Kill()

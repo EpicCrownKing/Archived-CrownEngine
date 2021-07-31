@@ -6,30 +6,31 @@ using CrownEngine.Engine;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 namespace CrownEngine.Content
 {
-    public class PlayerBolt : PhysicsActor
+    public class BossShip : PhysicsActor
     {
-        public PlayerBolt(Vector2 pos, Vector2 vel, Stage stage, Actor myOwner) : base(pos, vel, stage)
+        public BossShip(Vector2 pos, Vector2 vel, Stage stage) : base(pos, vel, stage)
         {
             position = pos;
             velocity = vel;
 
             myStage = stage;
-
-            owner = myOwner;
         }
 
-        public override int width => 6;
-        public override int height => 6;
+        public override int width => 16;
+        public override int height => 16;
 
-        public Actor owner;
+        public int hp = 3;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
         }
+
+        public float rotationVel;
 
         public override void PhysicsActorUpdate()
         {
@@ -61,21 +62,13 @@ namespace CrownEngine.Content
 
                             if ((velocity.X > 0 && EngineHelpers.IsTouchingLeft(playerRect, tileRect, velocity)) ||
                                 (velocity.X < 0 && EngineHelpers.IsTouchingRight(playerRect, tileRect, velocity)))
-                                Kill();
+                                velocity.X = 0;
 
                             if ((velocity.Y > 0 && EngineHelpers.IsTouchingTop(playerRect, tileRect, velocity)) ||
                                 (velocity.Y < 0 && EngineHelpers.IsTouchingBottom(playerRect, tileRect, velocity)))
-                                Kill();
+                                velocity.Y = 0;
                         }
                     }
-                }
-            }
-
-            for(int k = 0; k < myStage.actors.Count; k++)
-            {
-                if(myStage.actors[k] != null && myStage.actors[k] != owner && myStage.actors[k] != this && myStage.actors[k].rect.Intersects(this.rect))
-                {
-                    Kill();
                 }
             }
         }

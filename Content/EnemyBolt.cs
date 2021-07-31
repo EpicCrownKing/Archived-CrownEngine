@@ -59,12 +59,12 @@ namespace CrownEngine.Content
                             Point temp = new Point(height / 2, height / 2);
                             Rectangle playerRect = new Rectangle((int)position.X - temp.X, (int)position.Y - temp.Y, height, height);
 
-                            if ((velocity.X > 0 && Collision.IsTouchingLeft(playerRect, tileRect, velocity)) ||
-                                (velocity.X < 0 && Collision.IsTouchingRight(playerRect, tileRect, velocity)))
+                            if ((velocity.X > 0 && EngineHelpers.IsTouchingLeft(playerRect, tileRect, velocity)) ||
+                                (velocity.X < 0 && EngineHelpers.IsTouchingRight(playerRect, tileRect, velocity)))
                                 Kill();
 
-                            if ((velocity.Y > 0 && Collision.IsTouchingTop(playerRect, tileRect, velocity)) ||
-                                (velocity.Y < 0 && Collision.IsTouchingBottom(playerRect, tileRect, velocity)))
+                            if ((velocity.Y > 0 && EngineHelpers.IsTouchingTop(playerRect, tileRect, velocity)) ||
+                                (velocity.Y < 0 && EngineHelpers.IsTouchingBottom(playerRect, tileRect, velocity)))
                                 Kill();
                         }
                     }
@@ -75,6 +75,7 @@ namespace CrownEngine.Content
             {
                 if(myStage.actors[k] != null && myStage.actors[k] != owner && myStage.actors[k] != this && myStage.actors[k].rect.Intersects(this.rect))
                 {
+                    (myStage.actors[k] as Player).hp--;
                     Kill();
                 }
             }

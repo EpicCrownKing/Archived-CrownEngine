@@ -32,38 +32,41 @@ namespace CrownEngine.Content
 
         public override void PhysicsActorUpdate()
         {
-            if (EngineGame.instance.keyboardState.IsKeyDown(Keys.A))
+            if ((myStage as Facility).transTime <= -1)
+            {
+                if (EngineGame.instance.keyboardState.IsKeyDown(Keys.A))
                 rotationVel -= 0.02f;
 
-            if (EngineGame.instance.keyboardState.IsKeyDown(Keys.D))
-                rotationVel += 0.02f;
+                if (EngineGame.instance.keyboardState.IsKeyDown(Keys.D))
+                    rotationVel += 0.02f;
 
-            if (!EngineGame.instance.keyboardState.IsKeyDown(Keys.D) && !EngineGame.instance.keyboardState.IsKeyDown(Keys.A))
-            {
-                rotationVel *= 0.5f;
+                if (!EngineGame.instance.keyboardState.IsKeyDown(Keys.D) && !EngineGame.instance.keyboardState.IsKeyDown(Keys.A))
+                {
+                    rotationVel *= 0.5f;
+                }
+
+                rotationVel = rotationVel.Clamp(-0.1f, 0.1f);
+
+                rotation += rotationVel;
+
+                if (EngineGame.instance.keyboardState.IsKeyDown(Keys.W))
+                    velocity += (-Vector2.UnitY).RotatedBy(rotation) * 0.15f;
+                else if (EngineGame.instance.keyboardState.IsKeyDown(Keys.S))
+                    velocity += (Vector2.UnitY).RotatedBy(rotation) * 0.15f;
+                else
+                    velocity *= 0.8f;
+
+                if (EngineGame.instance.keyboardState.IsKeyDown(Keys.T) && !EngineGame.instance.oldKeyboardState.IsKeyDown(Keys.T))
+                {
+                    myStage.AddActor(new PlayerBolt(position, (-Vector2.UnitY).RotatedBy(rotation) * 3, myStage, this));
+                }
+
+                velocity = velocity.ClampVectorMagnitude(3f);
+
+                ManageCollision();
+
+                base.PhysicsActorUpdate();
             }
-
-            rotationVel = rotationVel.Clamp(-0.1f, 0.1f);
-
-            rotation += rotationVel;
-
-            if (EngineGame.instance.keyboardState.IsKeyDown(Keys.W))
-                velocity += (-Vector2.UnitY).RotatedBy(rotation) * 0.15f;
-            else if (EngineGame.instance.keyboardState.IsKeyDown(Keys.S))
-                velocity += (Vector2.UnitY).RotatedBy(rotation) * 0.15f;
-            else
-                velocity *= 0.8f;
-
-            if (EngineGame.instance.keyboardState.IsKeyDown(Keys.T) && !EngineGame.instance.oldKeyboardState.IsKeyDown(Keys.T))
-            {
-                myStage.AddActor(new PlayerBolt(position, (-Vector2.UnitY).RotatedBy(rotation) * 3, myStage, this));
-            }
-
-            velocity = velocity.ClampVectorMagnitude(3f);
-
-            ManageCollision();
-
-            base.PhysicsActorUpdate();
         }
 
         public override void PhysicsActorLoad()
@@ -89,12 +92,12 @@ namespace CrownEngine.Content
                             Point temp = new Point(height / 2, height / 2);
                             Rectangle playerRect = new Rectangle((int)position.X - temp.X, (int)position.Y - temp.Y, height, height);
 
-                            if ((velocity.X > 0 && Collision.IsTouchingLeft(playerRect, tileRect, velocity)) ||
-                                (velocity.X < 0 && Collision.IsTouchingRight(playerRect, tileRect, velocity)))
+                            if ((velocity.X > 0 && EngineHelpers.IsTouchingLeft(playerRect, tileRect, velocity)) ||
+                                (velocity.X < 0 && EngineHelpers.IsTouchingRight(playerRect, tileRect, velocity)))
                                 velocity.X = 0;
 
-                            if ((velocity.Y > 0 && Collision.IsTouchingTop(playerRect, tileRect, velocity)) ||
-                                (velocity.Y < 0 && Collision.IsTouchingBottom(playerRect, tileRect, velocity)))
+                            if ((velocity.Y > 0 && EngineHelpers.IsTouchingTop(playerRect, tileRect, velocity)) ||
+                                (velocity.Y < 0 && EngineHelpers.IsTouchingBottom(playerRect, tileRect, velocity)))
                                 velocity.Y = 0;
                         }
                     }

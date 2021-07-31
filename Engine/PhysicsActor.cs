@@ -35,14 +35,12 @@ namespace CrownEngine.Engine
 
         public virtual void PhysicsActorUpdate()
         {
-
+            position += velocity;
         }
 
         public override void Update()
         {
             PhysicsActorUpdate();
-
-            position += velocity;
         }
     }
 }
